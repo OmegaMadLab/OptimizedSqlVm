@@ -19,6 +19,7 @@
     },
     "availabilitySetName": {
       "type": "string",
+      "defaultValue": "",
       "metadata": {
         "description": "Name of the availability set; it will be created if it doesn't already exist. Leave empty if availability set is not needed'"
       }
@@ -41,14 +42,14 @@
       "maxLength": 100,
       "defaultValue": "",
       "metadata": {
-        "description": "The existing vnet you want to connect to"
+        "description": "The vnet you want to connect to. If it doesn't exist, it will be created. Leave it empty to use a default value based on VM name."
       }
     },
     "vnetResourceGroup": {
       "type": "string",
       "defaultValue": "",
       "metadata": {
-        "description": "The name of resource group which contains the virtual network"
+        "description": "If using an existing vnet, specify the name of resource group which contains it. Otherwise, leave it empty"
       }
     },
     "subnetName": {
@@ -67,7 +68,7 @@
     },
     "enableAcceleratedNetworking": {
       "type": "string",
-      "defaultValue": "Yes",
+      "defaultValue": "No",
       "allowedValues": [
         "Yes",
         "No"
@@ -86,17 +87,14 @@
     },
     "dnsLabelPrefix": {
       "type": "string",
+      "defaultValue": "",
       "metadata": {
         "description": "If public IP address is enabled, choose a unique DNS Name to access the Virtual Machine."
       }
     },
     "sqlVersion": {
-      "type": "object",
-      "defaultValue": {
-        "description": "SQL Server 2017 Developer (free) on Windows Server 2016",
-        "offer": "SQL2017-WS2016",
-        "sku": "SQLDEV"
-      },
+      "type": "string",
+      "defaultValue": "SQL Server 2017 Developer (free) on Windows Server 2016",
       "allowedValues": [
         "SQL Server 2012 SP3 Enterprise on Windows Server 2012 R2",
         "SQL Server 2012 SP3 Enterprise (BYOL) on Windows Server 2012 R2",
@@ -142,7 +140,7 @@
         },
     "vmSize": {
       "type": "string",
-      "defaultValue": "Standard_A4_v2",
+      "defaultValue": "Standard_DS2_v2",
       "metadata": {
         "description": "The size of the virtual machine"
       },
@@ -446,6 +444,24 @@
         "description": "Choose the time zone for the virtual machine"
       }
     },
+    "OsDiskSuffix": {
+      "type": "string",
+      "defaultValue": "OsDisk",
+      "allowedValues": [
+      ],
+      "metadata": {
+        "description": "Suffix that will be used to compose OS disk name"
+      }
+    },
+    "DataDiskSuffix": {
+      "type": "string",
+      "defaultValue": "DataDisk",
+      "allowedValues": [
+      ],
+      "metadata": {
+        "description": "Suffix that will be used to compose additional disk name"
+      }
+    },
     "#ofDataDisks": {
       "type": "int",
       "defaultValue": 1,
@@ -502,7 +518,7 @@
         "Standard_LRS",
         "Premium_LRS"
       ],
-      "defaultValue": "Standard_LRS",
+      "defaultValue": "Premium_LRS",
       "metadata": {
         "description": "The type of storage to use"
       }
@@ -513,12 +529,12 @@
       "maxLength": 25,
       "defaultValue": "",
       "metadata": {
-        "description": "The name of the storage account to use for diagnostic"
+        "description": "The name of the storage account to use for diagnostic logs. If it doesn't exist, it will be created. Leave it empty to use a default value based on VM name."
       }
     }
   },
   "variables": {
-    "storageAccountName": "[if(equals(length(parameters('diagStorageAccountName')), 0), concat(uniquestring(resourceGroup().id), toLower(parameters('vmName'))), parameters('diagStorageAccountName'))]",
+    "storageAccountName": "[if(equals(length(parameters('diagStorageAccountName')), 0), take(concat(uniquestring('diag', toLower(parameters('vmName')), resourceGroup().id)), 25), parameters('diagStorageAccountName'))]",
     "storageSku": "Standard_LRS",
     "nicName": "[concat(parameters('vmName'),'-NIC')]",
     "addressPrefix": "10.0.0.0/16",
@@ -983,14 +999,14 @@
           "osDisk": {
             "osType": "Windows",
             "createOption": "FromImage",
-            "name": "[concat(parameters('vmName'),'-OsDisk')]"
+            "name": "[concat(parameters('vmName'), '-', parameters('OsDiskSuffix'))]"
           },
           "copy": [
             {
               "name": "dataDisks",
               "count": "[add(parameters('#ofDataDisks'), parameters('#ofLogDisks'))]",
               "input": {
-                "name": "[concat(parameters('vmName'),'-DataDisk', string(CopyIndex('dataDisks')))]",
+                "name": "[concat(parameters('vmName'), '-', parameters('DataDiskSuffix'), string(CopyIndex('dataDisks', 1)))]",
                 "diskSizeGB": "[if(less(copyIndex('dataDisks'), parameters('#ofDataDisks')), parameters('DataDisksSize'), parameters('LogDisksSize'))]",
                 "lun": "[int(copyIndex('dataDisks'))]",
                 "caching": "[if(less(copyIndex('dataDisks'), parameters('#ofDataDisks')), variables('DataDiskCacheSetting'), variables('LogDiskCacheSetting'))]",
