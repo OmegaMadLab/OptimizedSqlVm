@@ -8,32 +8,32 @@
         "description": "The name for the Virtual Machine"
       }
     },
-    "domain": {
+    "adDomain": {
       "type": "string",
       "minLength": 0,
       "maxLength": 15,
       "defaultValue": "",
       "metadata": {
-        "description": "DNS name of the domain you want to join. Leave empty if you don't want to join during provisioning"
+        "description": "DNS name of the AD domain you want to join. Leave empty if you don't want to join a domain during provisioning"
       }
     },
     "availabilitySetName": {
       "type": "string",
       "defaultValue": "",
       "metadata": {
-        "description": "Name of the availability set; it will be created if it doesn't already exist. Leave empty if availability set is not needed'"
+        "description": "Name of the availability set; it will be created if it doesn't already exist. Leave empty if availability set is not needed"
       }
     },
     "adminUsername": {
       "type": "string",
       "metadata": {
-        "description": "Username for the Virtual Machine. If a domain is specified in the appropriate parameter, this credential will be used both for local admin and to join domain"
+        "description": "Admin username for the Virtual Machine. If a domain is specified in the appropriate parameter, this user will be used both for local admin and to join domain"
       }
     },
     "adminPassword": {
       "type": "securestring",
       "metadata": {
-        "description": "Password for the Virtual Machine."
+        "description": "Admin password for the Virtual Machine"
       }
     },
     "vnetName": {
@@ -42,7 +42,7 @@
       "maxLength": 100,
       "defaultValue": "",
       "metadata": {
-        "description": "The vnet you want to connect to. If it doesn't exist, it will be created. Leave it empty to use a default value based on VM name."
+        "description": "The vnet you want to connect to. Leave empty to create a new ad hoc virtual network"
       }
     },
     "vnetResourceGroup": {
@@ -72,7 +72,10 @@
       "allowedValues": [
         "Yes",
         "No"
-      ]
+      ],
+      "metadata": {
+        "description": "Would you like to enable accelerated networking? It works only on supported VMs"
+      }
     },
     "enablePublicIP": {
       "type": "string",
@@ -299,7 +302,7 @@
         "description": "Would you like to active Azure Hybrid Benefits and use an existing Windows license on this VM?"
       }
     },
-    "TimeZone": {
+    "timeZone": {
       "type": "string",
       "allowedValues": [
         "(UTC-12:00) International Date Line West",
@@ -444,7 +447,7 @@
         "description": "Choose the time zone for the virtual machine"
       }
     },
-    "OsDiskSuffix": {
+    "osDiskSuffix": {
       "type": "string",
       "defaultValue": "OsDisk",
       "allowedValues": [
@@ -453,13 +456,35 @@
         "description": "Suffix that will be used to compose OS disk name"
       }
     },
-    "DataDiskSuffix": {
+    "dataDiskSuffix": {
       "type": "string",
       "defaultValue": "DataDisk",
       "allowedValues": [
       ],
       "metadata": {
         "description": "Suffix that will be used to compose additional disk name"
+      }
+    },
+    "storageSKU": {
+      "type": "string",
+      "allowedValues": [
+        "Standard_LRS",
+        "Premium_LRS"
+      ],
+      "defaultValue": "Premium_LRS",
+      "metadata": {
+        "description": "The type of storage to use"
+      }
+    },
+    "workloadType": {
+      "type": "string",
+      "allowedValues": [
+        "OLTP",
+        "Datawarehouse"
+      ],
+      "defaultValue": "OLTP",
+      "metadata": {
+        "description": "The workload type which will be executed on this VM"
       }
     },
     "#ofDataDisks": {
@@ -469,7 +494,7 @@
         "description": "The number of data disks to add to the virtual machine"
       }
     },
-    "DataDisksSize": {
+    "dataDisksSize": {
       "type": "int",
       "defaultValue": 1023,
       "metadata": {
@@ -494,7 +519,7 @@
         "description": "The number of log disks to add to the virtual machine"
       }
     },
-    "LogDisksSize": {
+    "logDisksSize": {
       "type": "int",
       "defaultValue": 1023,
       "metadata": {
@@ -512,15 +537,18 @@
         "description": "Create a storage pool to stripe all the data disks?"
       }
     },
-    "storageSKU": {
-      "type": "string",
-      "allowedValues": [
-        "Standard_LRS",
-        "Premium_LRS"
-      ],
-      "defaultValue": "Premium_LRS",
+    "#ofAdditionalDisks": {
+      "type": "int",
+      "defaultValue": 0,
       "metadata": {
-        "description": "The type of storage to use"
+        "description": "The number of additional disks to add to the virtual machine"
+      }
+    },
+    "additionalDisksSize": {
+      "type": "int",
+      "defaultValue": 1023,
+      "metadata": {
+        "description": "The size of additional disks to add to the virtual machine"
       }
     },
     "diagStorageAccountName": {
@@ -963,7 +991,7 @@
             }
           }
         ],
-        "enableAcceleratedNetworking": false
+        "enableAcceleratedNetworking": "[if(equals(tolower(parameters('enableAcceleratedNetworking')), 'yes'), bool('true'), bool('false'))]"
       }
     },
     {
@@ -1004,7 +1032,7 @@
           "copy": [
             {
               "name": "dataDisks",
-              "count": "[add(parameters('#ofDataDisks'), parameters('#ofLogDisks'))]",
+              "count": "[add(add(parameters('#ofDataDisks'), parameters('#ofLogDisks')), parameters('#ofAdditionalDisks'))]",
               "input": {
                 "name": "[concat(parameters('vmName'), '-', parameters('DataDiskSuffix'), string(CopyIndex('dataDisks', 1)))]",
                 "diskSizeGB": "[if(less(copyIndex('dataDisks'), parameters('#ofDataDisks')), parameters('DataDisksSize'), parameters('LogDisksSize'))]",
@@ -1038,7 +1066,7 @@
           "name": "Microsoft.Powershell.DSC",
           "type": "extensions",
           "location": "[resourceGroup().location]",
-          "condition": "[greater(length(parameters('domain')), 0)]",
+          "condition": "[greater(length(parameters('adDomain')), 0)]",
           "apiVersion": "2017-12-01",
           "dependsOn": [
             "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
@@ -1058,7 +1086,7 @@
                 "function": "ADDomainJoin"
               },
               "configurationArguments": {
-                "DomainName": "[parameters('domain')]"
+                "DomainName": "[parameters('adDomain')]"
               }
             },
             "protectedSettings": {
