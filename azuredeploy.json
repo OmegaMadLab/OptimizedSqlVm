@@ -450,17 +450,13 @@
     "osDiskSuffix": {
       "type": "string",
       "defaultValue": "OsDisk",
-      "allowedValues": [
-      ],
       "metadata": {
         "description": "Suffix that will be used to compose OS disk name"
       }
     },
-    "dataDiskSuffix": {
+    "AdditionalDiskSuffix": {
       "type": "string",
       "defaultValue": "DataDisk",
-      "allowedValues": [
-      ],
       "metadata": {
         "description": "Suffix that will be used to compose additional disk name"
       }
@@ -1034,7 +1030,7 @@
               "name": "dataDisks",
               "count": "[add(add(parameters('#ofDataDisks'), parameters('#ofLogDisks')), parameters('#ofAdditionalDisks'))]",
               "input": {
-                "name": "[concat(parameters('vmName'), '-', parameters('DataDiskSuffix'), string(CopyIndex('dataDisks', 1)))]",
+                "name": "[concat(parameters('vmName'), '-', parameters('AdditionalDiskSuffix'), string(CopyIndex('dataDisks', 1)))]",
                 "diskSizeGB": "[if(less(copyIndex('dataDisks'), parameters('#ofDataDisks')), parameters('DataDisksSize'), parameters('LogDisksSize'))]",
                 "lun": "[int(copyIndex('dataDisks'))]",
                 "caching": "[if(less(copyIndex('dataDisks'), parameters('#ofDataDisks')), variables('DataDiskCacheSetting'), variables('LogDiskCacheSetting'))]",
