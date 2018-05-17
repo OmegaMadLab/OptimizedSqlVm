@@ -10,7 +10,7 @@ param (
     # If present, all data disks will be striped in a storage pool
     [Parameter(Mandatory = $false)]
     [switch]
-    $StripeDataDisks = $false,
+    $StripeDataDisks,
 
     # Number of data disks
     [Parameter(Mandatory = $true)]
@@ -20,7 +20,7 @@ param (
     # If present, all data disks will be striped in a storage pool
     [Parameter(Mandatory = $false)]
     [switch]
-    $StripeLogDisks = $false,
+    $StripeLogDisks,
 
     # Number of additional disks
     [Parameter(Mandatory = $true)]
