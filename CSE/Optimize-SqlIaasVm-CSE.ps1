@@ -367,7 +367,8 @@ $ScriptBlock = {
 
 #Execution with different account
 Enable-PSRemoting -Force
-$credential = New-Object System.Management.Automation.PSCredential("$env:COMPUTERNAME\$SysAdminUsername", $SysAdminPassword)
+$secpasswd = ConvertTo-SecureString $SysAdminPassword -AsPlainText -Force
+$credential = New-Object System.Management.Automation.PSCredential("$env:COMPUTERNAME\$SysAdminUsername", $secpasswd)
 Invoke-Command -ScriptBlock $ScriptBlock `
     -ArgumentList @($DataPath, $LogPath, $BackupPath, $ErrorLogPath, $WorkloadType) `
     -Credential $credential 
