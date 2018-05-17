@@ -7,7 +7,7 @@ param(
     [string]$WorkloadType
 )
 
-Import-Module .\Optimize-SqlIaasVm-CSE.psm1
+Import-Module "$WorkingPath\Optimize-SqlIaasVm-CSE.psm1"
 
 $SqlInstanceName = "MSSQLSERVER"
 
