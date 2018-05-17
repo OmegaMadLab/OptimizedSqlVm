@@ -1,4 +1,5 @@
 param(
+    [string]$WorkingPath,
     [string]$DataPath,
     [string]$LogPath,
     [string]$BackupPath,
