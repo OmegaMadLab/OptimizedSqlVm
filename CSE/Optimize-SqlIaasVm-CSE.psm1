@@ -386,6 +386,40 @@ function Get-SqlServerVersion {
     $SqlServerVersion.SqlServerVersion.ToString()
 }
 
+# function New-WindowsLogin {
+
+#     param (
+#         [Parameter(Mandatory=$true)]
+#         [string]$SqlInstanceName,
+
+#         [Parameter(Mandatory=$true)]
+#         [string]$Username,
+
+#         [Parameter(Mandatory=$True)]
+#         [securestring]$Domain
+
+#     )
+
+#     $qry = @"
+#     USE [master]
+#     GO
+#     CREATE LOGIN [{1}] FROM WINDOWS WITH DEFAULT_DATABASE=[master]
+#     GO
+#     ALTER SERVER ROLE [sysadmin] ADD MEMBER [{1}]
+#     GO
+# "@
+
+#     if($Domain) {
+#         $AccountName = "$Domain\"
+#     }
+    
+
+    $SqlServerVersion = Invoke-Sqlcmd -ServerInstance (Convert-SqlServerInstanceName -SqlInstanceName $SqlInstanceName) `
+                            -Query "select SERVERPROPERTY('ProductVersion') as SqlServerVersion;" `
+                            -QueryTimeout 3
+    
+    $SqlServerVersion.SqlServerVersion.ToString()
+}
 function Set-SqlInstanceOptimization {
     
     param (
@@ -608,7 +642,6 @@ function Set-SQLServerDefaultPath {
     }
     
 }
-
 function Move-SystemDatabaseAndTrace {
     param (
         [Parameter(Mandatory=$true)]
