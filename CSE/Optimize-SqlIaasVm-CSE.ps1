@@ -40,7 +40,7 @@ param (
 
     # SysAdmin Password
     [Parameter(Mandatory = $true)]
-    [securestring]
+    [string]
     $SysAdminPassword
 
 )
