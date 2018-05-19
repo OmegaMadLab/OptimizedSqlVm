@@ -102,8 +102,7 @@ The template is still WIP, some parameters are not functional yet and a custom s
         <td>workloadType</td>
         <td>The kind of workload which will tipically run on this VM.<br>
         It's used to configure various paramters like stripe size, SQL trace flags, etc.<br>
-        <i>This parameter is not yet fully functional in the template; it have impacts only on storage configuration.</i></td>
-    </tr>
+        <i>This parameter is not yet fully functional in the template; it have impacts only on storage configuration.</i></td>    </tr>
     <tr>
         <td>#ofDataDisks</td>
         <td>Number of managed disks which will host SQL Server data files.<br>
@@ -148,7 +147,7 @@ The template is still WIP, some parameters are not functional yet and a custom s
 
 After the deployment, an Azure Custom Script extension will be launched to:
 <ul>
-    <li>create SQL optimized storage pools, if striping is enabled for data or log disks></li>
+    <li>create SQL optimized storage pools, if striping is enabled for data or log disks</li>
     <li>create SQL optimized volumes</li>
     <li>create folder for data files, log files, backup and errorlog
 </ul>
