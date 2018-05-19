@@ -41,11 +41,11 @@ The template is still WIP, some parameters are not functional yet and a custom s
     <tr>
         <td>vnetResourceGroup</td>
         <td>If using an existing vnet, specify the resource group which contains it.<br>
-        Leave empty if you're creating a new ad hoc network</td>
+        Leave empty if you're creating a new ad hoc network.</td>
     </tr>
     <tr>
         <td>subnetName</td>
-        <td>The subnet you want to connect to</td>
+        <td>The subnet you want to connect to.</td>
     </tr>
     <tr>
         <td>privateIp</td>
@@ -87,12 +87,12 @@ The template is still WIP, some parameters are not functional yet and a custom s
     <tr>
         <td>osDiskSuffix</td>
         <td>The suffix used to compose the OS disk name.<br>
-        Final disk name will be composed as [vmName]-[osDiskSuffix]</td>
+        Final disk name will be composed as [vmName]-[osDiskSuffix].</td>
     </tr>
     <tr>
         <td>dataDiskSuffix</td>
         <td>The suffix used to compose the additional disk (data, log) name.<br>
-        Final disk name will be composed as [vmName]-[dataDiskSuffix][number of the disk, starting with 1]</td>
+        Final disk name will be composed as [vmName]-[dataDiskSuffix][number of the disk, starting with 1].</td>
     </tr>
     <tr>
         <td>storageSKU</td>
@@ -102,12 +102,12 @@ The template is still WIP, some parameters are not functional yet and a custom s
         <td>workloadType</td>
         <td>The kind of workload which will tipically run on this VM.<br>
         It's used to configure various paramters like stripe size, SQL trace flags, etc.<br>
-        <i>This parameter is not yet active in the template</i></td>
+        <i>This parameter is not yet fully functional in the template; it have impacts only on storage configuration.</i></td>
     </tr>
     <tr>
         <td>#ofDataDisks</td>
         <td>Number of managed disks which will host SQL Server data files.<br>
-        Cache will be set to 'ReadOnly' for Premium disks or 'None' for Standard disks</td>
+        Cache will be set to 'ReadOnly' for Premium disks or 'None' for Standard disks.</td>
     </tr>
     <tr>
         <td>dataDisksSize</td>
@@ -115,13 +115,12 @@ The template is still WIP, some parameters are not functional yet and a custom s
     </tr>
     <tr>
         <td>stripeDataDisks</td>
-        <td>Choose YES to configure a striped Storage Pool on all data disks.<br>
-        <i>This parameter is not yet active in the template</i></td>
+        <td>Choose YES to configure a striped Storage Pool on all data disks.</td>
     </tr>
     <tr>
         <td>#ofLogDisks</td>
         <td>Number of managed disks which will host SQL Server log files.<br>
-        Cache will be set to 'None' both for Premium and Standard disks</td>
+        Cache will be set to 'None' both for Premium and Standard disks.</td>
     </tr>
     <tr>
         <td>logDisksSize</td>
@@ -129,8 +128,7 @@ The template is still WIP, some parameters are not functional yet and a custom s
     </tr>
     <tr>
         <td>stripeLogDisks</td>
-        <td>Choose YES to configure a striped Storage Pool on all log disks.<br>
-        <i>This parameter is not yet active in the template</i></td>
+        <td>Choose YES to configure a striped Storage Pool on all log disks.</td>
     </tr>
         <tr>
         <td>#ofAdditionalDisks</td>
@@ -148,4 +146,11 @@ The template is still WIP, some parameters are not functional yet and a custom s
     </tr>
 </table>
 
+After the deployment, an Azure Custom Script extension will be launched to:
+<ul>
+    <li>create SQL optimized storage pools, if striping is enabled for data or log disks></li>
+    <li>create SQL optimized volumes</li>
+    <li>create folder for data files, log files, backup and errorlog
+</ul>
 
+In near future, the template will be able to set SQL Server default paths, move databases from Os disk to data disks and to apply SQL Server optimization like trace flags, max server memory, TempDB multiple data files provisionig.
