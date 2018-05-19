@@ -4,7 +4,14 @@
 
 This template allows you to deploy a SQL Server on Windows VM on Azure IaaS, following best practices explained on <a href="https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sql/virtual-machines-windows-sql-performance">official documentation</a>.
 
-The template is still WIP, some parameters are not functional yet and a custom script extension to apply changes on SQL Server configuration inside the VM will be added in the next future.
+After the deployment, an Azure Custom Script extension will be launched to:
+<ul>
+    <li>create SQL optimized storage pools, if striping is enabled for data or log disks</li>
+    <li>create SQL optimized volumes</li>
+    <li>create folder for data files, log files, backup and errorlog
+</ul>
+
+In near future, the template will be able to set SQL Server default paths, move databases from Os disk to data disks and to apply SQL Server optimization like trace flags, max server memory, TempDB multiple data files provisionig.
 
 <table>
     <tr>
@@ -144,12 +151,3 @@ The template is still WIP, some parameters are not functional yet and a custom s
         Leave it empty to create an ad hoc storage account.</td>
     </tr>
 </table>
-
-After the deployment, an Azure Custom Script extension will be launched to:
-<ul>
-    <li>create SQL optimized storage pools, if striping is enabled for data or log disks</li>
-    <li>create SQL optimized volumes</li>
-    <li>create folder for data files, log files, backup and errorlog
-</ul>
-
-In near future, the template will be able to set SQL Server default paths, move databases from Os disk to data disks and to apply SQL Server optimization like trace flags, max server memory, TempDB multiple data files provisionig.
