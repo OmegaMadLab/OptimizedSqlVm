@@ -54,7 +54,7 @@
     },
     "subnetName": {
       "type": "string",
-      "defaultValue": "Default",
+      "defaultValue": "default",
       "metadata": {
         "description": "The subnet you want to connect to"
       }
@@ -562,7 +562,7 @@
     "storageSku": "Standard_LRS",
     "nicName": "[concat(parameters('vmName'),'-NIC')]",
     "addressPrefix": "10.0.0.0/16",
-    "subnetName": "[if(equals(length(parameters('subnetName')), 0), 'Default', parameters('subnetName'))]",
+    "subnetName": "[if(equals(length(parameters('subnetName')), 0), 'default', parameters('subnetName'))]",
     "subnetPrefix": "10.0.0.0/24",
     "publicIPAddressName": "[concat(parameters('vmName'),'-PublicIP')]",
     "publicIpAllocationMethod": "Dynamic",
@@ -867,7 +867,12 @@
         "sku": "SQLDEV"
       }
     },
-    "_artifactsLocation": "https://raw.githubusercontent.com/OmegaMadLab/OptimizedSqlVm/master"
+    "_artifactsLocation": "https://raw.githubusercontent.com/OmegaMadLab/OptimizedSqlVm/master",
+    "SqlIaasOptimizeCsefolder": "CSE",
+    "SqlIaasOptimizeCseScript": "Optimize-SqlIaasVm-CSE.ps1",
+    "SqlIaasOptimizeCseScriptImpersonated": "Optimized-SqlIaasVm-CSE-userImpersonation.ps1",
+    "SqlIaasOptimizeCseModule": "Optimize-SqlIaasVm-CSE.psm1", 
+    "SqlIaasOptimizeCseParameters": "[concat('-NumberOfDataDisks ', parameters('#ofDataDisks'), if(equals(tolower(parameters('stripeDataDisks')), 'yes'), ' -StripeDataDisks', ''), ' -NumberOfLogDisks ', parameters('#ofLogDisks'), if(equals(tolower(parameters('stripeLogDisks')), 'yes'), ' -StripeLogDisks ', ''), ' -NumberOfAdditionalDisks ', parameters('#ofAdditionalDisks'), ' -WorkloadType ', parameters('workloadType'), ' -SysAdminUsername ', parameters('adminUsername') , ' -SysAdminPassword ', parameters('adminPassword'))]"
   },
   "resources": [
     {
@@ -1116,6 +1121,32 @@
           "AutoTelemetrySettings": {
             "Region": "[resourceGroup().location]"
           }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "[concat(parameters('vmName'), '/SqlIaasOptimizeCSE')]",
+      "apiVersion": "2015-06-15",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[concat('Microsoft.Compute/virtualMachines/', parameters('vmName'))]"
+      ],
+      "properties": {
+        "publisher": "Microsoft.Compute",
+        "type": "CustomScriptExtension",
+        "typeHandlerVersion": "1.8",
+        "autoUpgradeMinorVersion": true,
+        "settings": {
+          "fileUris": [
+            "[concat(variables('_artifactsLocation'), '/', variables('SqlIaasOptimizeCsefolder'), '/', variables('SqlIaasOptimizeCseScript'))]",
+            "[concat(variables('_artifactsLocation'), '/', variables('SqlIaasOptimizeCsefolder'), '/', variables('SqlIaasOptimizeCseModule'))]",
+            "[concat(variables('_artifactsLocation'), '/', variables('SqlIaasOptimizeCsefolder'), '/', variables('SqlIaasOptimizeCseScriptImpersonated'))]"
+          ],
+          "commandToExecute": ""
+        },
+        "protectedSettings": {
+          "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File \".\\', variables('SqlIaasOptimizeCseScript'), '\" ', variables('SqlIaasOptimizeCseParameters'))]"
         }
       }
     }

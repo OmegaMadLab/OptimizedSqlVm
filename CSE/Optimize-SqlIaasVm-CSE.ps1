@@ -278,16 +278,16 @@ if($NumberOfAdditionalDisks -ge 1) {
     
 }
 
-#Execution with different account
-Enable-PSRemoting -Force
-$secpasswd = ConvertTo-SecureString $SysAdminPassword -AsPlainText -Force
-$credential = New-Object System.Management.Automation.PSCredential("$env:COMPUTERNAME\$SysAdminUsername", $secpasswd)
+# #Execution with different account
+# Enable-PSRemoting -Force
+# $secpasswd = ConvertTo-SecureString $SysAdminPassword -AsPlainText -Force
+# $credential = New-Object System.Management.Automation.PSCredential("$env:COMPUTERNAME\$SysAdminUsername", $secpasswd)
 
-$WorkingPath = (Push-Location -PassThru).Path
+# $WorkingPath = (Push-Location -PassThru).Path
 
-Invoke-Command -FilePath .\Optimized-SqlIaasVm-CSE-userImpersonation.ps1 `
-    -ArgumentList ($WorkingPath, $DataPath, $LogPath, $BackupPath, $ErrorLogPath, $WorkloadType) `
-    -Credential $credential `
-    -ComputerName .
+# Invoke-Command -FilePath .\Optimized-SqlIaasVm-CSE-userImpersonation.ps1 `
+#     -ArgumentList ($WorkingPath, $DataPath, $LogPath, $BackupPath, $ErrorLogPath, $WorkloadType) `
+#     -Credential $credential `
+#     -ComputerName .
 
 
