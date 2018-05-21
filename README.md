@@ -4,6 +4,8 @@
 
 This template allows you to deploy a SQL Server on Windows VM on Azure IaaS, following best practices explained on <a href="https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sql/virtual-machines-windows-sql-performance">official documentation</a>.
 
+A DSC resource will execute domain join, if requested.
+
 After the deployment, an Azure Custom Script extension will be launched to:
 <ul>
     <li>create SQL optimized storage pools, if striping is enabled for data or log disks</li>
@@ -23,14 +25,14 @@ In near future, the template will be able to set SQL Server default paths, move 
         <td>Name assigned to the VM.</td>
     </tr>
     <tr>
-        <td>adDomain</td>
-        <td>DNS name of the AD domain you want to join.<br>
-            Leave empty if you don't want to join a domain during provisioning.</td>
-    </tr>
-    <tr>
         <td>availabilitySetName</td>
         <td>Name of the availability set you want to join; it will be created if it doesn't already exist.<br>
             Leave empty if availability set is not needed.</td>
+    </tr>
+    <tr>
+        <td>adDomain</td>
+        <td>DNS name of the AD domain you want to join.<br>
+            Leave empty if you don't want to join a domain during provisioning.</td>
     </tr>
     <tr>
         <td>adminUsername</td>
