@@ -66,6 +66,16 @@ configuration SQLADDomainJoin
             DependsOn = "[xWaitForADDomain]DscForestWait"
         }
 
+        SqlServerRole Add_ServerRole_SysAdmin
+        {
+            Ensure               = 'Present'
+            ServerRoleName       = 'sysadmin'
+            MembersToInclude     = "$DomainNetbiosName\$($AdminCreds.UserName)"
+            ServerName           = $env:COMPUTERNAME
+            InstanceName         = 'MSSQLSERVER'
+            PsDscRunAsCredential = $SqlAdministratorCredential
+        }
+
         LocalConfigurationManager 
         {
             RebootNodeIfNeeded = $true
