@@ -63,7 +63,7 @@ configuration SQLADDomainJoin
             ServerName           = $env:COMPUTERNAME
             InstanceName         = 'MSSQLSERVER'
             PsDscRunAsCredential = $SqlAdministratorCredential
-            DependsOn = "[xWaitForADDomain]DscForestWait"
+            DependsOn = "[xComputer]DomainJoin"
         }
 
         SqlServerRole Add_ServerRole_SysAdmin
@@ -74,6 +74,7 @@ configuration SQLADDomainJoin
             ServerName           = $env:COMPUTERNAME
             InstanceName         = 'MSSQLSERVER'
             PsDscRunAsCredential = $SqlAdministratorCredential
+            DependsOn = "[SqlServerLogin]Add_WindowsUser"
         }
 
         LocalConfigurationManager 
