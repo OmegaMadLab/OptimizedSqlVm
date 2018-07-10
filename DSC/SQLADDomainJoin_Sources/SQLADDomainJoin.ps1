@@ -1,8 +1,8 @@
 #
-# Copyright="© Microsoft Corporation. All rights reserved."
+# Copyright="ï¿½ Microsoft Corporation. All rights reserved."
 #
 
-configuration ADDomainJoin
+configuration SQLADDomainJoin
 {
     param
     (
@@ -18,9 +18,10 @@ configuration ADDomainJoin
         [Int]$RetryIntervalSec=30
     )
 
-    Import-DscResource -ModuleName xComputerManagement, xActiveDirectory, PSDesiredStateConfiguration
+    Import-DscResource -ModuleName xComputerManagement, xActiveDirectory, PSDesiredStateConfiguration, SqlServerDsc
     [System.Management.Automation.PSCredential]$DomainCreds = New-Object System.Management.Automation.PSCredential ("${DomainNetbiosName}\$($Admincreds.UserName)", $Admincreds.Password)
     [System.Management.Automation.PSCredential]$DomainFQDNCreds = New-Object System.Management.Automation.PSCredential ("${DomainName}\$($Admincreds.UserName)", $Admincreds.Password)
+    [System.Management.Automation.PSCredential]$SqlAdministratorCredential = New-Object System.Management.Automation.PSCredential ("$env:COMPUTERNAME\$($Admincreds.UserName)", $Admincreds.Password)
 
     $RebootVirtualMachine = $false
 
@@ -52,6 +53,17 @@ configuration ADDomainJoin
             DomainName = $DomainName
             Credential = $DomainCreds
 	        DependsOn = "[xWaitForADDomain]DscForestWait"
+        }
+
+        SqlServerLogin Add_WindowsUser
+        {
+            Ensure               = 'Present'
+            Name                 = "$DomainNetbiosName\$($AdminCreds.UserName)"
+            LoginType            = 'WindowsUser'
+            ServerName           = $env:COMPUTERNAME
+            InstanceName         = 'MSSQLSERVER'
+            PsDscRunAsCredential = $SqlAdministratorCredential
+            DependsOn = "[xWaitForADDomain]DscForestWait"
         }
 
         LocalConfigurationManager 

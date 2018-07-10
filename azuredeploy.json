@@ -576,8 +576,8 @@
     "StorageTemplateFileName": "Storage.json",
     "PublicIPTemplateFileName": "PublicIP.json",
     "AvSetTemplateFileName": "AvSet.json",
-    "ADDomainJoinArchiveFolder": "DSC",
-    "ADDomainJoinArchiveFileName": "ADDomainJoin.zip",
+    "SQLADDomainJoinArchiveFolder": "DSC",
+    "SQLADDomainJoinArchiveFileName": "SQLADDomainJoin.zip",
     "TimeZoneObj": {
       "(UTC-12:00) International Date Line West": { "id": "Dateline Standard Time" },
       "(UTC-11:00) Coordinated Universal Time-11": { "id": "UTC-11" },
@@ -1063,7 +1063,7 @@
       },
       "resources": [
         {
-          "name": "Microsoft.Powershell.DSC",
+          "name": "Microsoft.Powershell.DSC.DomainJoin",
           "type": "extensions",
           "location": "[resourceGroup().location]",
           "condition": "[greater(length(parameters('adDomain')), 0)]",
@@ -1081,46 +1081,9 @@
             "autoUpgradeMinorVersion": true,
             "settings": {
               "configuration": {
-                "url": "[concat(variables('_artifactsLocation'), '/', variables('ADDomainJoinArchiveFolder'), '/', variables('ADDomainJoinArchiveFileName'))]",
-                "script": "ADDomainJoin.ps1",
-                "function": "ADDomainJoin"
-              },
-              "configurationArguments": {
-                "DomainName": "[parameters('adDomain')]"
-              }
-            },
-            "protectedSettings": {
-              "configurationArguments": {
-                "Admincreds": {
-                  "userName": "[parameters('adminUserName')]",
-                  "Password": "[parameters('adminPassword')]"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name": "Microsoft.Powershell.DSC",
-          "type": "extensions",
-          "location": "[resourceGroup().location]",
-          "condition": "[greater(length(parameters('adDomain')), 0)]",
-          "apiVersion": "2017-12-01",
-          "dependsOn": [
-            "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
-          ],
-          "tags": {
-            "displayName": "CreateWindowsLogin"
-          },
-          "properties": {
-            "publisher": "Microsoft.Powershell",
-            "type": "DSC",
-            "typeHandlerVersion": "2.75",
-            "autoUpgradeMinorVersion": true,
-            "settings": {
-              "configuration": {
-                "url": "[concat(variables('_artifactsLocation'), '/', variables('ADDomainJoinArchiveFolder'), '/', variables('ADDomainJoinArchiveFileName'))]",
-                "script": "CreateWindowsLogin.ps1",
-                "function": "CreateWindowsLogin"
+                "url": "[concat(variables('_artifactsLocation'), '/', variables('SQLADDomainJoinArchiveFolder'), '/', variables('SQLADDomainJoinArchiveFileName'))]",
+                "script": "SQLADDomainJoin.ps1",
+                "function": "SQLADDomainJoin"
               },
               "configurationArguments": {
                 "DomainName": "[parameters('adDomain')]"
