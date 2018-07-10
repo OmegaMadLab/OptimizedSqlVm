@@ -1063,7 +1063,7 @@
       },
       "resources": [
         {
-          "name": "Microsoft.Powershell.DSC.DomainJoin",
+          "name": "Microsoft.Powershell.DSC",
           "type": "extensions",
           "location": "[resourceGroup().location]",
           "condition": "[greater(length(parameters('adDomain')), 0)]",
@@ -1072,7 +1072,7 @@
             "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
           ],
           "tags": {
-            "displayName": "ADDomainJoin"
+            "displayName": "SQLADDomainJoin"
           },
           "properties": {
             "publisher": "Microsoft.Powershell",
