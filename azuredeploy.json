@@ -465,6 +465,7 @@
       "type": "string",
       "allowedValues": [
         "Standard_LRS",
+        "StandardSSD_LRS",
         "Premium_LRS"
       ],
       "defaultValue": "Premium_LRS",
@@ -569,7 +570,7 @@
     "virtualNetworkName": "[if(equals(length(parameters('vnetName')), 0), concat(parameters('vmName'),'-Vnet'), parameters('vnetName'))]",
     "vnetID": "[resourceId(variables('vnetResourceGroupName'), 'Microsoft.Network/virtualNetworks', variables('virtualNetworkName'))]",
     "subnetRef": "[concat(variables('vnetID'),'/subnets/', toLower(variables('subnetName')))]",
-    "DataDiskCacheSetting": "[if(equals(parameters('storageSku'), 'Premium_LRS'), 'ReadOnly', 'None')]",
+    "DataDiskCacheSetting": "[if(or(equals(parameters('storageSku'), 'Premium_LRS'),equals(parameters('storageSku'), 'StandardSSD_LRS')), 'ReadOnly', 'None')]",
     "LogDiskCacheSetting": "None",
     "NestedTemplateFolder": "nestedtemplates",
     "NetworkTemplateFileName": "Network.json",
@@ -995,7 +996,7 @@
       }
     },
     {
-      "apiVersion": "2017-12-01",
+      "apiVersion": "2018-04-01",
       "type": "Microsoft.Compute/virtualMachines",
       "name": "[parameters('vmName')]",
       "location": "[resourceGroup().location]",
