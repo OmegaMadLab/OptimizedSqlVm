@@ -867,12 +867,12 @@
         "sku": "SQLDEV"
       }
     },
-    "_artifactsLocation": "https://raw.githubusercontent.com/OmegaMadLab/OptimizedSqlVm/master",
+    "_artifactsLocation": "https://raw.githubusercontent.com/OmegaMadLab/OptimizedSqlVm/wip",
     "SqlIaasOptimizeCsefolder": "CSE",
     "SqlIaasOptimizeCseScript": "Optimize-SqlIaasVm-CSE.ps1",
     "SqlIaasOptimizeCseScriptImpersonated": "Optimized-SqlIaasVm-CSE-userImpersonation.ps1",
     "SqlIaasOptimizeCseModule": "Optimize-SqlIaasVm-CSE.psm1", 
-    "SqlIaasOptimizeCseParameters": "[concat('-NumberOfDataDisks ', parameters('#ofDataDisks'), if(equals(tolower(parameters('stripeDataDisks')), 'yes'), ' -StripeDataDisks', ''), ' -NumberOfLogDisks ', parameters('#ofLogDisks'), if(equals(tolower(parameters('stripeLogDisks')), 'yes'), ' -StripeLogDisks ', ''), ' -NumberOfAdditionalDisks ', parameters('#ofAdditionalDisks'), ' -WorkloadType ', parameters('workloadType'), ' -SysAdminUsername ', parameters('adminUsername') , ' -SysAdminPassword ', parameters('adminPassword'))]"
+    "SqlIaasOptimizeCseParameters": "[concat('-NumberOfDataDisks ', parameters('#ofDataDisks'), if(equals(tolower(parameters('stripeDataDisks')), 'yes'), ' -StripeDataDisks', ''), ' -NumberOfLogDisks ', parameters('#ofLogDisks'), if(equals(tolower(parameters('stripeLogDisks')), 'yes'), ' -StripeLogDisks ', ''), ' -NumberOfAdditionalDisks ', parameters('#ofAdditionalDisks'), ' -WorkloadType \"', parameters('workloadType'), '\" -SysAdminUsername \"', parameters('adminUsername') , '\" -SysAdminPassword \"', parameters('adminPassword'), '\"')]"
   },
   "resources": [
     {
