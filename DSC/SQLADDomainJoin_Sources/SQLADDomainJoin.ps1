@@ -77,6 +77,41 @@ configuration SQLADDomainJoin
             DependsOn = "[SqlServerLogin]Add_WindowsUser"
         }
 
+        Registry CredSSP1 {
+            Ensure = "Present"
+            Key = "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\CredentialsDelegation"
+            ValueName = "AllowFreshCredentials"
+            ValueData = "1"
+            ValueType = "Dword"
+        }
+
+        Registry CredSSP2 {
+            Ensure = "Present"
+            Key = "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\CredentialsDelegation"
+            ValueName = "AllowFreshCredentialsWhenNTLMOnly"
+            ValueData = "1"
+            ValueType = "Dword"
+        }
+
+        Registry CredSSP3 {
+            Ensure = "Present"
+            Key = "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\CredentialsDelegation\AllowFreshCredentials"
+            ValueName = "1"
+            ValueData = "WSMAN/*.$DomainName"
+            ValueType = "String"
+            DependsOn = "[Registry]CredSSP1"
+        }
+
+        Registry CredSSP4 {
+            Ensure = "Present"
+            Key = "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\CredentialsDelegation\AllowFreshCredentialsWhenNTLMOnly"
+            ValueName = "1"
+            ValueData = "WSMAN/*.$DomainName"
+            ValueType = "String"
+            DependsOn = "[Registry]CredSSP2"
+        }
+
+
         LocalConfigurationManager 
         {
             RebootNodeIfNeeded = $true

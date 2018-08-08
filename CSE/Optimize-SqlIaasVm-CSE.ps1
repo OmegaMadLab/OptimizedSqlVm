@@ -278,16 +278,26 @@ if($NumberOfAdditionalDisks -ge 1) {
     
 }
 
-# #Execution with different account
-# Enable-PSRemoting -Force
-# $secpasswd = ConvertTo-SecureString $SysAdminPassword -AsPlainText -Force
-# $credential = New-Object System.Management.Automation.PSCredential("$env:COMPUTERNAME\$SysAdminUsername", $secpasswd)
+#Execution with different account
+Enable-PSRemoting -Force
+$DomainName = [System.String] (Get-CimInstance -ClassName Win32_ComputerSystem -Verbose:$false).Domain;
+Enable-WSManCredSSP -Role Client -DelegateComputer "*.$DomainName" -Force
+Enable-WSManCredSSP -Role Server -Force
 
-# $WorkingPath = (Push-Location -PassThru).Path
+$secpasswd = ConvertTo-SecureString $SysAdminPassword -AsPlainText -Force
+$credential = New-Object System.Management.Automation.PSCredential("$env:COMPUTERNAME\$SysAdminUsername", $secpasswd)
 
-# Invoke-Command -FilePath .\Optimized-SqlIaasVm-CSE-userImpersonation.ps1 `
-#     -ArgumentList ($WorkingPath, $DataPath, $LogPath, $BackupPath, $ErrorLogPath, $WorkloadType) `
-#     -Credential $credential `
-#     -ComputerName .
+$WorkingPath = (Push-Location -PassThru).Path
+
+Invoke-Command -FilePath .\Optimized-SqlIaasVm-CSE-userImpersonation.ps1 `
+    -ArgumentList ($WorkingPath, $DataPath, $LogPath, $BackupPath, $ErrorLogPath, $WorkloadType) `
+    -Credential $credential `
+    -ComputerName $env:COMPUTERNAME
+
+Enable-WSManCredSSP -Role Client
+Enable-WSManCredSSP -Role Server
+
+
+
 
 
