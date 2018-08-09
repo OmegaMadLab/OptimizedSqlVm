@@ -443,21 +443,21 @@ function Add-SqlServiceSIDtoLocalPrivilege {
     $configFile = New-Item -Path (Join-Path -Path $env:TEMP -ChildPath "$((New-Guid).Guid.Substring(0,8)).inf") -ItemType File
 
     $fileHeader = @"
-    [Unicode]
-    Unicode=yes
-    [Version]
-    signature="`$CHICAGO$"
-    Revision=1
-    [Privilege Rights]
+[Unicode]`r`n
+Unicode=yes`r`n
+[Version]`r`n
+signature="`$CHICAGO`$"`r`n
+Revision=1`r`n
+[Privilege Rights]`r`n
 "@
 
-    $fileHeader | Out-File $configFile -Force
+    $fileHeader | Out-File $configFile -Encoding unicode -Force
 
     #Generating a temporary file to hold secedit export
     $tempFile = New-Item -Path (Join-Path -Path $env:TEMP -ChildPath "$((New-Guid).Guid.Substring(0,8)).inf") -ItemType File
 
     #Export current local policy (user right assignment area)
-    secedit /export /areas USER_RIGHTS /cfg $tempFile | Out-Null
+    secedit /export /areas USER_RIGHTS /cfg $tempFile
 
     #Looking for privilege in exported file and write config file
     $tempFileContent = Get-Content $tempFile -Encoding Unicode
@@ -465,12 +465,12 @@ function Add-SqlServiceSIDtoLocalPrivilege {
     $found = $false
     for($idx=0;$idx -lt $tempFileContent.GetUpperBound(0);$idx++) {
         if($tempFileContent[$idx].StartsWith($privilege)) {
-            "$($tempFileContent[$idx]),$($serviceSid)" | Out-File $configFile -Append unicode -Force
+            "$($tempFileContent[$idx]),$($serviceSid)" | Out-File $configFile -Append -Encoding unicode -Force
             $found = $true
         }
     }
     if(-not $found) {
-        "$($privilege) = $($serviceSid)" | Out-File $configFile -Append unicode -Force
+        "$($privilege) = $($serviceSid)" | Out-File $configFile -Append -Encoding unicode -Force
     }
 
     #Import config

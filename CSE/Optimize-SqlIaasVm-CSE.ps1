@@ -289,13 +289,6 @@ $credential = New-Object System.Management.Automation.PSCredential("$env:COMPUTE
 
 $WorkingPath = (Push-Location -PassThru).Path
 
-$WorkingPath
-$DataPath
-$LogPath
-$BackupPath
-$ErrorLogPath
-$WorkloadType
-
 Invoke-Command -FilePath .\Optimized-SqlIaasVm-CSE-userImpersonation.ps1 `
     -ArgumentList ($WorkingPath, $DataPath, $LogPath, $BackupPath, $ErrorLogPath, $WorkloadType) `
     -Credential $credential `
