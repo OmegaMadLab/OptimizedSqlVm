@@ -601,9 +601,8 @@ function Set-SQLServerDefaultPath {
 
     if($changed) {
 
-        Stop-SqlService -SqlService (Get-SQLService -SqlInstanceName $SqlInstanceName)
         $srv.Alter()
-        Start-SqlService -SqlService (Get-SQLService -SqlInstanceName $SqlInstanceName)
+        Restart-SqlService -SqlService (Get-SQLService -SqlInstanceName $SqlInstanceName)
     }
     
 }

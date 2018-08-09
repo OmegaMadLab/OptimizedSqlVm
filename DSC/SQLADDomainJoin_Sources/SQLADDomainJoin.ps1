@@ -111,7 +111,6 @@ configuration SQLADDomainJoin
             DependsOn = "[Registry]CredSSP2"
         }
 
-
         LocalConfigurationManager 
         {
             RebootNodeIfNeeded = $true
