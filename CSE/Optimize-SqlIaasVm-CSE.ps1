@@ -301,8 +301,8 @@ Invoke-Command -FilePath .\Optimized-SqlIaasVm-CSE-userImpersonation.ps1 `
     -Credential $credential `
     -ComputerName $env:COMPUTERNAME
 
-Enable-WSManCredSSP -Role Client
-Enable-WSManCredSSP -Role Server
+Disable-WSManCredSSP -Role Client
+Disable-WSManCredSSP -Role Server
 
 
 
