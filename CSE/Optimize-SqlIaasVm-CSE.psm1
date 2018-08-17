@@ -442,7 +442,7 @@ function Add-SqlServiceSIDtoLocalPrivilege {
 
     #Generating a temporary file to hold new configuration
     $fileName = "$([guid]::NewGuid().ToString().SubString(0,8)).inf"
-    $configFile = New-Item -Path (Join-Path -Path $env:TEMP -ChildPath $fileName -ItemType File
+    $configFile = New-Item -Path (Join-Path -Path $env:TEMP -ChildPath $fileName) -ItemType File
 
     $fileHeader = @"
 [Unicode]`r`n
@@ -457,7 +457,7 @@ Revision=1`r`n
 
     #Generating a temporary file to hold secedit export
     $fileName = "$([guid]::NewGuid().ToString().SubString(0,8)).inf"
-    $tempFile = New-Item -Path (Join-Path -Path $env:TEMP -ChildPath $fileName -ItemType File
+    $tempFile = New-Item -Path (Join-Path -Path $env:TEMP -ChildPath $fileName) -ItemType File
 
     #Export current local policy (user right assignment area)
     secedit /export /areas USER_RIGHTS /cfg $tempFile
