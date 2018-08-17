@@ -29,7 +29,7 @@ param (
     
     # Type of workload
     [Parameter(Mandatory = $false)]
-    [ValidateSet("OLTP","DW", "GENERIC")]
+    [ValidateSet("OLTP","DW", "Generic")]
     [string]
     $WorkloadType = "OLTP",
 

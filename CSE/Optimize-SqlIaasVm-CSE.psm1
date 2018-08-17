@@ -282,7 +282,7 @@ function Format-VolumeForSql {
         [ValidateSet('NTFS','ReFS')]
         [string]$FileSystem,
         [int]$AllocationUnitSizeKB = 64,
-        [switch]$Force
+        [switch]$Force = $false
     )
 
     if(-not $Force) {
@@ -304,7 +304,7 @@ function Format-VolumeForSql {
                     -NewFileSystemLabel $VolumeLabel `
                     -AllocationUnitSize ([int]$AllocationUnitSizeKB*1024) `
                     -Force `
-                    -Confirm:$Force | Out-Null
+                    -Confirm:$false | Out-Null
     
     Return $true
 }
