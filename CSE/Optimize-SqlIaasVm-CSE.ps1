@@ -98,7 +98,7 @@ if($NumberOfDataDisks -ge 1) {
 
         
         # Get single disks dedicated to data
-        $SingleDisk = Get-PhysicalDisk -Model 'Virtual Disk*' | Where-Object {$_.PhysicalLocation.split(" ")[-1] -In $DataLun } | Get-Disk | Sort-Object Number
+        $SingleDisk = Get-PhysicalDiskExt | Where-Object {$_.InterfaceType -eq 'SCSI' -and $_.ScsiLun -In $DataLun } | Get-Disk | Sort-Object Number
 
         $i = 1
         $SingleDisk | ForEach-Object {
@@ -187,7 +187,7 @@ if($NumberOfLogDisks -ge 1) {
     } else {
 
         # Get single disks dedicated to log
-        $SingleDisk = Get-PhysicalDisk -Model 'Virtual Disk*' | Where-Object {$_.PhysicalLocation.split(" ")[-1] -In $LogLun } | Get-Disk | Sort-Object Number
+        $SingleDisk = Get-PhysicalDiskExt | Where-Object {$_.InterfaceType -eq 'SCSI' -and $_.ScsiLun -In $LogLun } | Get-Disk | Sort-Object Number
 
         $i = 1
         $SingleDisk | ForEach-Object {
@@ -240,7 +240,7 @@ if($NumberOfAdditionalDisks -ge 1) {
     $AdditionalLun = @(($DataAndLogDisks)..($DataAndLogDisks + $NumberOfAdditionalDisks - 1))
 
     # Get single disks
-    $SingleDisk = Get-PhysicalDisk -Model 'Virtual Disk*' | Where-Object {$_.PhysicalLocation.split(" ")[-1] -In $AdditionalLun } | Get-Disk | Sort-Object Number
+    $SingleDisk = Get-PhysicalDiskExt | Where-Object {$_.InterfaceType -eq 'SCSI' -and $_.ScsiLun -In $AdditionalLun } | Get-Disk | Sort-Object Number
 
     $i = 1
     $SingleDisk | ForEach-Object {

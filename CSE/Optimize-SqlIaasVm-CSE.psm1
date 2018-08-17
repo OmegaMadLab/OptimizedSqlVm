@@ -62,6 +62,7 @@ function Get-PhysicalDiskExt {
         $WmiDiskDrive = Get-WmiObject -Class Win32_DiskDrive | Where-Object Index -eq $Disk.DeviceId
 
         $Properties = [ordered]@{
+            InterfaceType = if(!$WmiDiskDrive.InterfaceType) { "StoragePool" } else { $WmiDiskDrive.InterfaceType }
             DeviceId = $Disk.DeviceId
             ScsiLun =$WmiDiskDrive.SCSILogicalUnit
             PhysicalLocation = $Disk.PhysicalLocation
