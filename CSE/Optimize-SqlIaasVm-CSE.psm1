@@ -789,4 +789,4 @@ function Get-SQLService {
 
 }
 
-Export-ModuleMember -Function @("New-StoragePoolForSql", "New-SqlDirectory", "New-SingleDiskForSql", "Set-SqlInstanceOptimization", "Set-SQLServerDefaultPath", "Move-SystemDatabaseAndTrace", "Get-SqlServerVersion")
+Export-ModuleMember -Function @("New-StoragePoolForSql", "New-SqlDirectory", "New-SingleDiskForSql", "Set-SqlInstanceOptimization", "Set-SQLServerDefaultPath", "Move-SystemDatabaseAndTrace", "Get-SqlServerVersion", "Get-PhysicalDiskExt")
