@@ -2,11 +2,10 @@
 # Copyright="� Microsoft Corporation. All rights reserved."
 #
 
-configuration SQLADDomainJoin
+configuration SqlDscConfig
 {
     param
     (
-        [Parameter(Mandatory)]
         [String]$DomainName,
 
         [Parameter(Mandatory)]
@@ -19,62 +18,64 @@ configuration SQLADDomainJoin
     )
 
     Import-DscResource -ModuleName xComputerManagement, xActiveDirectory, PSDesiredStateConfiguration, SqlServerDsc
-    [System.Management.Automation.PSCredential]$DomainCreds = New-Object System.Management.Automation.PSCredential ("${DomainNetbiosName}\$($Admincreds.UserName)", $Admincreds.Password)
-    [System.Management.Automation.PSCredential]$DomainFQDNCreds = New-Object System.Management.Automation.PSCredential ("${DomainName}\$($Admincreds.UserName)", $Admincreds.Password)
     [System.Management.Automation.PSCredential]$SqlAdministratorCredential = New-Object System.Management.Automation.PSCredential ("$env:COMPUTERNAME\$($Admincreds.UserName)", $Admincreds.Password)
 
-    $RebootVirtualMachine = $false
+    $RebootVirtualMachine = $true
 
     if ($DomainName)
     {
-        $RebootVirtualMachine = $true
+        [System.Management.Automation.PSCredential]$DomainCreds = New-Object System.Management.Automation.PSCredential ("${DomainNetbiosName}\$($Admincreds.UserName)", $Admincreds.Password)
+        [System.Management.Automation.PSCredential]$DomainFQDNCreds = New-Object System.Management.Automation.PSCredential ("${DomainName}\$($Admincreds.UserName)", $Admincreds.Password)
     }
 
     Node localhost
     {
-        WindowsFeature ADPS
+        if ($DomainName)
         {
-            Name = "RSAT-AD-PowerShell"
-            Ensure = "Present"
-        }
+            WindowsFeature ADPS
+            {
+                Name = "RSAT-AD-PowerShell"
+                Ensure = "Present"
+            }
 
-        xWaitForADDomain DscForestWait 
-        { 
-            DomainName = $DomainName 
-            DomainUserCredential= $DomainCreds
-            RetryCount = $RetryCount 
-            RetryIntervalSec = $RetryIntervalSec 
-	        DependsOn = "[WindowsFeature]ADPS"
-        }
-        
-        xComputer DomainJoin
-        {
-            Name = $env:COMPUTERNAME
-            DomainName = $DomainName
-            Credential = $DomainCreds
-	        DependsOn = "[xWaitForADDomain]DscForestWait"
-        }
+            xWaitForADDomain DscForestWait 
+            { 
+                DomainName = $DomainName 
+                DomainUserCredential= $DomainCreds
+                RetryCount = $RetryCount 
+                RetryIntervalSec = $RetryIntervalSec 
+                DependsOn = "[WindowsFeature]ADPS"
+            }
+            
+            xComputer DomainJoin
+            {
+                Name = $env:COMPUTERNAME
+                DomainName = $DomainName
+                Credential = $DomainCreds
+                DependsOn = "[xWaitForADDomain]DscForestWait"
+            }
 
-        SqlServerLogin Add_WindowsUser
-        {
-            Ensure               = 'Present'
-            Name                 = "$DomainNetbiosName\$($AdminCreds.UserName)"
-            LoginType            = 'WindowsUser'
-            ServerName           = $env:COMPUTERNAME
-            InstanceName         = 'MSSQLSERVER'
-            PsDscRunAsCredential = $SqlAdministratorCredential
-            DependsOn = "[xComputer]DomainJoin"
-        }
+            SqlServerLogin Add_WindowsUser
+            {
+                Ensure               = 'Present'
+                Name                 = "$DomainNetbiosName\$($AdminCreds.UserName)"
+                LoginType            = 'WindowsUser'
+                ServerName           = $env:COMPUTERNAME
+                InstanceName         = 'MSSQLSERVER'
+                PsDscRunAsCredential = $SqlAdministratorCredential
+                DependsOn = "[xComputer]DomainJoin"
+            }
 
-        SqlServerRole Add_ServerRole_SysAdmin
-        {
-            Ensure               = 'Present'
-            ServerRoleName       = 'sysadmin'
-            MembersToInclude     = "$DomainNetbiosName\$($AdminCreds.UserName)"
-            ServerName           = $env:COMPUTERNAME
-            InstanceName         = 'MSSQLSERVER'
-            PsDscRunAsCredential = $SqlAdministratorCredential
-            DependsOn = "[SqlServerLogin]Add_WindowsUser"
+            SqlServerRole Add_ServerRole_SysAdmin
+            {
+                Ensure               = 'Present'
+                ServerRoleName       = 'sysadmin'
+                MembersToInclude     = "$DomainNetbiosName\$($AdminCreds.UserName)"
+                ServerName           = $env:COMPUTERNAME
+                InstanceName         = 'MSSQLSERVER'
+                PsDscRunAsCredential = $SqlAdministratorCredential
+                DependsOn = "[SqlServerLogin]Add_WindowsUser"
+            }
         }
 
         Registry CredSSP1 {
