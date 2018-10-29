@@ -1,7 +1,3 @@
-#
-# Copyright="� Microsoft Corporation. All rights reserved."
-#
-
 configuration SqlDscConfig
 {
     param
