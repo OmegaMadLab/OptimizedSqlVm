@@ -913,7 +913,7 @@
         "sku": "SQLDEV"
       }
     },
-    "_artifactsLocation": "https://raw.githubusercontent.com/OmegaMadLab/OptimizedSqlVm/wip",
+    "_artifactsLocation": "https://raw.githubusercontent.com/OmegaMadLab/OptimizedSqlVm/master",
     "SqlDscConfigArchiveFolder": "DSC",
     "SqlDscConfigArchiveFileName": "SqlDscConfig.zip",
     "SqlDscConfigScript": "SqlDscConfig.ps1",
