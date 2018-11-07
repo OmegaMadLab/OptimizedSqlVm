@@ -12,7 +12,10 @@ After the deployment, an Azure Custom Script extension will be launched to:
 - create folder for data files, log files, backup and errorlog
 - change SQL Server default data paths
 - move system DBs, errorlog and traces to appropriate volumes
-- apply SQL Server optimizations like trace flags, max server memory, TempDB multiple data files provisionig.
+- apply SQL Server optimizations like trace flags, max server memory, TempDB multiple data files provisioning.
+
+The template isn't yet tested on all the possible scenarios, expecially in the CSE context which is indeed quite complex.
+It should works correctly on the vast majority of scenarios, but please be aware you may face into small bugs.
 
 ## Parameters
 Parameter|Description
