@@ -621,9 +621,10 @@
       },
       {
           "name": "asgIds",
-          "count": "[length(parameters('asgIds'))]",
+          "condition": "tre",
+          "count": "[if(equals(length(parameters('asgIds')), 0), 1, length(parameters('asgIds')))]",
           "input": {
-              "id": "[parameters('asgIds')[CopyIndex('asgIds')]]"
+              "id": "[if(equals(length(parameters('asgIds')), 0), '', parameters('asgIds')[CopyIndex('asgIds')])]"
           }
       }
     ],    
@@ -1074,7 +1075,7 @@
               "subnet": {
                 "id": "[variables('subnetRef')]"
               },
-              "applicationSecurityGroups": "[variables('asgIds')]"
+              "applicationSecurityGroups": "[if(equals(length(parameters('asgIds')), 0), json('null'), variables('asgIds'))]"
             }
           }
         ],
