@@ -110,7 +110,7 @@
       "type": "array",
       "minLength": 0,
       "maxLength": 100,
-      "defaultValue": "[array(json('null'))]",
+      "defaultValue": [],
       "metadata": {
         "description": "The array of application security group ids you want to join. Leave empty to skip this step."
       }
@@ -632,7 +632,6 @@
       },
       {
           "name": "asgIds",
-          "condition": "tre",
           "count": "[if(equals(length(parameters('asgIds')), 0), 1, length(parameters('asgIds')))]",
           "input": {
               "id": "[if(equals(length(parameters('asgIds')), 0), '', parameters('asgIds')[CopyIndex('asgIds')])]"
