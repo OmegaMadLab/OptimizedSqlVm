@@ -110,7 +110,7 @@
       "type": "array",
       "minLength": 0,
       "maxLength": 100,
-      "defaultValue": "[json('null')]",
+      "defaultValue": "[array(json('null'))]",
       "metadata": {
         "description": "The array of application security group ids you want to join. Leave empty to skip this step."
       }
