@@ -12,7 +12,18 @@
       "type": "string",
       "defaultValue": "",
       "metadata": {
-        "description": "Name of the availability set; it will be created if it doesn't already exist. Leave empty if availability set is not needed"
+        "description": "Name of the availability set. Leave empty if availability set is not needed"
+      }
+    },
+    "createAvailabilitySet": {
+      "type": "string",
+      "defaultValue": "Yes",
+      "allowedValues": [
+        "Yes",
+        "No"
+      ],
+      "metadata": {
+        "description": "Choose YES if the Availability Set specified before must be created by the template; choose NO if the Availability Set already exists"
       }
     },
     "adDomain": {
@@ -1016,6 +1027,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2016-09-01",
       "condition": "[greater(length(parameters('availabilitySetName')), 0)]",
+      "condition": "[and(greater(length(parameters('availabilitySetName')), 0),equals(toLower(parameters('createAvailabilitySet')), 'yes'))]",
       "dependsOn": [],
       "properties": {
         "mode": "Incremental",
