@@ -1026,7 +1026,6 @@
       "name": "AvSet",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2016-09-01",
-      "condition": "[greater(length(parameters('availabilitySetName')), 0)]",
       "condition": "[and(greater(length(parameters('availabilitySetName')), 0),equals(toLower(parameters('createAvailabilitySet')), 'yes'))]",
       "dependsOn": [],
       "properties": {
