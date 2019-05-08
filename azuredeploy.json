@@ -162,7 +162,8 @@
         "SQL Server 2017 Standard (BYOL) on Windows Server 2016",
         "SQL Server 2017 Web on Windows Server 2016",
         "SQL Server 2017 Express (free) on Windows Server 2016",
-        "SQL Server 2017 Developer (free) on Windows Server 2016"
+        "SQL Server 2017 Developer (free) on Windows Server 2016",
+        "(CTP2.5) SQL Server 2019 on Windows Server 2016"
        ],
        "metadata": {
             "description": "The SQL Server version you want to deploy"
@@ -488,7 +489,7 @@
         "description": "Suffix that will be used to compose additional disk name"
       }
     },
-    "storageSKU": {
+    "osDiskStorageSku": {
       "type": "string",
       "allowedValues": [
         "Standard_LRS",
@@ -498,7 +499,20 @@
       ],
       "defaultValue": "Premium_LRS",
       "metadata": {
-        "description": "The type of storage to use"
+        "description": "The type of storage to use for OS disk"
+      }
+    },
+    "dataDiskStorageSku": {
+      "type": "string",
+      "allowedValues": [
+        "Standard_LRS",
+        "StandardSSD_LRS",
+        "Premium_LRS",
+        "UltraSSD_LRS"
+      ],
+      "defaultValue": "Premium_LRS",
+      "metadata": {
+        "description": "The type of storage to use for Data Disks"
       }
     },
     "workloadType": {
@@ -598,7 +612,6 @@
   },
   "variables": {
     "storageAccountName": "[if(equals(length(parameters('diagStorageAccountName')), 0), take(concat(uniquestring('diag', toLower(parameters('vmName')), resourceGroup().id)), 25), parameters('diagStorageAccountName'))]",
-    "storageSku": "Standard_LRS",
     "nicName": "[concat(parameters('vmName'),'-NIC')]",
     "addressPrefix": "10.0.0.0/16",
     "subnetName": "[if(equals(length(parameters('subnetName')), 0), 'default', parameters('subnetName'))]",
@@ -609,10 +622,9 @@
     "virtualNetworkName": "[if(equals(length(parameters('vnetName')), 0), concat(parameters('vmName'),'-Vnet'), parameters('vnetName'))]",
     "vnetID": "[resourceId(variables('vnetResourceGroupName'), 'Microsoft.Network/virtualNetworks', variables('virtualNetworkName'))]",
     "subnetRef": "[concat(variables('vnetID'),'/subnets/', toLower(variables('subnetName')))]",
-    "DataDiskCacheSetting": "[if(or(equals(parameters('storageSku'), 'Premium_LRS'),equals(parameters('storageSku'), 'StandardSSD_LRS')), 'ReadOnly', 'None')]",
+    "DataDiskCacheSetting": "[if(or(equals(parameters('dataDiskStorageSku'), 'Premium_LRS'),equals(parameters('dataDiskStorageSku'), 'StandardSSD_LRS')), 'ReadOnly', 'None')]",
     "LogDiskCacheSetting": "None",
     "AdditionalDiskCacheSetting": "None",
-    "OsDiskStorageSku": "StandardSSD_LRS",
     "AdditionalDiskStorageSku": "Standard_LRS",
     "#ofDisks": "[add(add(parameters('#ofDataDisks'), parameters('#ofLogDisks')), parameters('#ofAdditionalDisks'))]",
     "copy": [
@@ -626,7 +638,7 @@
               "caching": "[if(less(copyIndex('dataDisks'), parameters('#ofDataDisks')), variables('DataDiskCacheSetting'), if(less(copyIndex('dataDisks'), add(parameters('#ofDataDisks'), parameters('#ofLogDisks'))), variables('LogDiskCacheSetting'), variables('AdditionalDiskCacheSetting')))]",
               "createOption": "Empty",
               "managedDisk": {
-                "storageAccountType": "[if(less(copyIndex('dataDisks'), add(parameters('#ofDataDisks'), parameters('#ofLogDisks'))), parameters('storageSKU'), variables('AdditionalDiskStorageSku'))]"
+                "storageAccountType": "[if(less(copyIndex('dataDisks'), add(parameters('#ofDataDisks'), parameters('#ofLogDisks'))), parameters('dataDiskStorageSku'), variables('AdditionalDiskStorageSku'))]"
               }
           }
       },
@@ -957,6 +969,10 @@
       "SQL Server 2017 Developer (free) on Windows Server 2016": {
         "offer": "SQL2017-WS2016",
         "sku": "SQLDEV"
+      },
+      "(CTP2.5) SQL Server 2019 on Windows Server 2016": {
+        "offer": "SQL2019-WS2016",
+        "sku": "SQLDEV"
       }
     },
     "_artifactsLocation": "https://raw.githubusercontent.com/OmegaMadLab/OptimizedSqlVm/master",
@@ -1016,7 +1032,7 @@
             "value": "[variables('storageAccountName')]"
           },
           "storageSku": {
-            "value": "[variables('storageSku')]"
+            "value": "Standard_LRS"
           }
         }
       }
@@ -1127,7 +1143,7 @@
             "createOption": "FromImage",
             "name": "[concat(parameters('vmName'), '-', parameters('OsDiskSuffix'))]",
             "managedDisk": {
-              "storageAccountType": "[variables('OsDiskStorageSku')]"
+              "storageAccountType": "[parameters('OsDiskStorageSku')]"
             }
           },
           "dataDisks": "[variables('dataDisks')]"

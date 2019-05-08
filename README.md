@@ -39,7 +39,8 @@ Parameter|Description
 **timeZone**|The time zone for this VM.
 **osDiskSuffix**|The suffix used to compose the OS disk name. Final disk name will be composed as *[vmName-osDiskSuffix]*.
 **additionalDiskSuffix**|The suffix used to compose the additional disk (data, log, backup) name. Final disk name will be composed as *[vmName]-[dataDiskSuffix][number of the disk, starting with 1]*
-**storageSKU**|The kind of storage used for data disks used by this VM. Values can be *Standard_LRS*, *StandardSSD_LRS*, *Premium_LRS*, *UltraSSD_LRS*. Please note that storage sku for OS and backup disks is governed by a template variable. 
+**osDiskStorageSKU**|The kind of storage used for OS disk used by this VM. Values can be *Standard_LRS*, *StandardSSD_LRS*, *Premium_LRS*, *UltraSSD_LRS*.
+**dataDiskStorageSKU**|The kind of storage used for data disks used by this VM. Values can be *Standard_LRS*, *StandardSSD_LRS*, *Premium_LRS*, *UltraSSD_LRS*. Please note that storage sku backup disks is governed by a template variable.
 **workloadType**|The kind of workload which will tipically run on this VM. It's used to configure various paramters like stripe size, SQL trace flags, etc.
 **#ofDataDisks**|Number of managed disks which will host SQL Server data files. Cache will be set to 'ReadOnly' for Premium disks or 'None' for Standard disks.
 **dataDisksSize**|Size of managed disks which will host SQL Server data files.
