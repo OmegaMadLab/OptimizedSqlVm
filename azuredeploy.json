@@ -156,6 +156,13 @@
         "SQL Server 2016 SP2 Web on Windows Server 2016",
         "SQL Server 2016 SP2 Express (free) on Windows Server 2016",
         "SQL Server 2016 SP2 Developer (free) on Windows Server 2016",
+        "SQL Server 2016 SP2 Enterprise on Windows Server 2019",
+        "SQL Server 2016 SP2 Enterprise (BYOL) on Windows Server 2019",
+        "SQL Server 2016 SP2 Standard on Windows Server 2019",
+        "SQL Server 2016 SP2 Standard (BYOL) on Windows Server 2019",
+        "SQL Server 2016 SP2 Web on Windows Server 2019",
+        "SQL Server 2016 SP2 Express (free) on Windows Server 2019",
+        "SQL Server 2016 SP2 Developer (free) on Windows Server 2019",
         "SQL Server 2017 Enterprise on Windows Server 2016",
         "SQL Server 2017 Enterprise (BYOL) on Windows Server 2016",
         "SQL Server 2017 Standard on Windows Server 2016",
@@ -947,6 +954,34 @@
       },
       "SQL Server 2016 SP2 Developer (free) on Windows Server 2016": {
         "offer": "SQL2016SP2-WS2016",
+        "sku": "SQLDEV"
+      },
+            "SQL Server 2016 SP2 Enterprise on Windows Server 2019": {
+        "offer": "SQL2016SP2-WS2019",
+        "sku": "Enterprise"
+      },
+      "SQL Server 2016 SP2 Enterprise (BYOL) on Windows Server 2019": {
+        "offer": "SQL2016SP2-WS2019-BYOL",
+        "sku": "Enterprise"
+      },
+      "SQL Server 2016 SP2 Standard on Windows Server 2019": {
+        "offer": "SQL2016SP2-WS2019",
+        "sku": "Standard"
+      },
+      "SQL Server 2016 SP2 Standard (BYOL) on Windows Server 2019": {
+        "offer": "SQL2016SP2-WS2019-BYOL",
+        "sku": "Standard"
+      },
+      "SQL Server 2016 SP2 Web on Windows Server 2019": {
+        "offer": "SQL2016SP2-WS2019",
+        "sku": "Web"
+      },
+      "SQL Server 2016 SP2 Express (free) on Windows Server 2019": {
+        "offer": "SQL2016SP2-WS2019",
+        "sku": "Express"
+      },
+      "SQL Server 2016 SP2 Developer (free) on Windows Server 2019": {
+        "offer": "SQL2016SP2-WS2019",
         "sku": "SQLDEV"
       },
       "SQL Server 2017 Enterprise on Windows Server 2016": {
