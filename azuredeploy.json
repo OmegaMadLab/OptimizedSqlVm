@@ -163,7 +163,14 @@
         "SQL Server 2017 Web on Windows Server 2016",
         "SQL Server 2017 Express (free) on Windows Server 2016",
         "SQL Server 2017 Developer (free) on Windows Server 2016",
-        "(CTP2.5) SQL Server 2019 on Windows Server 2016"
+        "SQL Server 2017 Enterprise on Windows Server 2019",
+        "SQL Server 2017 Enterprise (BYOL) on Windows Server 2019",
+        "SQL Server 2017 Standard on Windows Server 2019",
+        "SQL Server 2017 Standard (BYOL) on Windows Server 2019",
+        "SQL Server 2017 Web on Windows Server 2019",
+        "SQL Server 2017 Express (free) on Windows Server 2019",
+        "SQL Server 2017 Developer (free) on Windows Server 2019",
+        "(RC1) SQL Server 2019 on Windows Server 2016"
        ],
        "metadata": {
             "description": "The SQL Server version you want to deploy"
@@ -970,7 +977,35 @@
         "offer": "SQL2017-WS2016",
         "sku": "SQLDEV"
       },
-      "(CTP2.5) SQL Server 2019 on Windows Server 2016": {
+      "SQL Server 2017 Enterprise on Windows Server 2019": {
+        "offer": "SQL2017-WS2019",
+        "sku": "Enterprise"
+      },
+      "SQL Server 2017 Enterprise (BYOL) on Windows Server 2019": {
+        "offer": "SQL2017-WS2019-BYOL",
+        "sku": "Enterprise"
+      },
+      "SQL Server 2017 Standard on Windows Server 2019": {
+        "offer": "SQL2017-WS2019",
+        "sku": "Standard"
+      },
+      "SQL Server 2017 Standard (BYOL) on Windows Server 2019": {
+        "offer": "SQL2017-WS2019-BYOL",
+        "sku": "Standard"
+      },
+      "SQL Server 2017 Web on Windows Server 2019": {
+        "offer": "SQL2017-WS2019",
+        "sku": "Web"
+      },
+      "SQL Server 2017 Express (free) on Windows Server 2019": {
+        "offer": "SQL2017-WS2019",
+        "sku": "Express"
+      },
+      "SQL Server 2017 Developer (free) on Windows Server 2019": {
+        "offer": "SQL2017-WS2019",
+        "sku": "SQLDEV"
+      },
+      "(RC1) SQL Server 2019 on Windows Server 2016": {
         "offer": "SQL2019-WS2016",
         "sku": "SQLDEV"
       }
